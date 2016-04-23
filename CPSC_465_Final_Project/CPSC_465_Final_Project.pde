@@ -14,23 +14,31 @@ int Window3_EndX;
 int Window3_EndY;
 
 int Window_Buffer = 15;
+int Data_Buffer = 15;
+
 float Window1_Width_Percent = .75;
 float Window1_Height_Percent = .667;
+
+int[] data;
 
 int Bar_Buffer = 4;
 
 void setup() {
   size(1600, 1000);
-
+  surface.setResizable(true);
+  data = new int[272];
+  createData();
+  frameRate(5);
 }
 
 void draw() {
   background(100);
   drawWindows();
+  drawData();
 }
 
 void drawWindows() {
-    Window1_StartX = Window_Buffer;
+  Window1_StartX = Window_Buffer;
   Window1_StartY = Window_Buffer;
   Window1_EndX = int(width - (3 * Window_Buffer) - (width * (1 - Window1_Width_Percent)));
   Window1_EndY = int(height - (3 * Window_Buffer) - (height * (1 - Window1_Height_Percent)));
@@ -48,6 +56,41 @@ void drawWindows() {
   Window3_EndY = height - Window_Buffer;  
   rect(Window3_StartX, Window3_StartY, (Window3_EndX - Window3_StartX), (Window3_EndY - Window3_StartY));
 }
+
+void createData() {
+  for (int i = 0; i < 272; i++) {
+    data[i] = int(random(100));
+  }
+}
+
+void drawData() {
+  int Window1_RangeX = Window1_EndX - Window1_StartX - 2*Data_Buffer;
+  float Window1_SteppingX = float(Window1_RangeX) / 271;
+  
+  int Window1_RangeY = Window1_EndY - (Window1_StartY+2*Data_Buffer);
+  
+ // int drawLocationX = 0;
+ 
+  for (int i = 0; i < 272; i++) {
+    line((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY-Data_Buffer, (i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(data[i], 0, 100, 0, Window1_RangeY));
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 For the Window 1 panel, this will be a bar graph of the temperature over time with a single point mark on each bar to indicate how many steps were walked, or something like that.
