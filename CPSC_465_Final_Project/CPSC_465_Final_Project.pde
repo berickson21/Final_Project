@@ -23,7 +23,18 @@ int[] data;
 
 int Bar_Buffer = 4;
 
+Table data = new Table();
+Day[] days;
+
 void setup() {
+
+  data = loadTable("data.csv");
+  
+  for (int i = 1; i < data.getRowCount(); i++){
+    days[i] = new Day(data.getString(i,0), data.getInt(i,1), 
+    data.getInt(i,3), data.getFloat(i,4), data.getInt(i,6), data.getInt(i,7) );
+  }  
+
   size(1600, 1000);
   surface.setResizable(true);
   data = new int[272];
