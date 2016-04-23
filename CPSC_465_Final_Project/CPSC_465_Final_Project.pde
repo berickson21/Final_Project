@@ -69,11 +69,14 @@ void drawData() {
   
   int Window1_RangeY = Window1_EndY - (Window1_StartY+2*Data_Buffer);
   
- // int drawLocationX = 0;
- 
+  // int drawLocationX = 0;
+  beginShape();
+  strokeWeight(1);
   for (int i = 0; i < 272; i++) {
-    line((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY-Data_Buffer, (i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(data[i], 0, 100, 0, Window1_RangeY));
+    
+    vertex((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(data[i], 0, 100, 0, Window1_RangeY));
   }
+  endShape();
 }
 
 
