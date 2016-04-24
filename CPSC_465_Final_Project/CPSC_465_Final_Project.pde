@@ -84,6 +84,8 @@ void initValues() {
 }
 
 void drawWindows() {
+  stroke(0,0,0);
+  fill(255,255,255);
   Window1_StartX = Window_Buffer;
   Window1_StartY = Window_Buffer;
   Window1_EndX = int(width - (3 * Window_Buffer) - (width * (1 - Window1_Width_Percent)));
@@ -108,9 +110,33 @@ void drawData() {
   int Window1_RangeY = Window1_EndY - (Window1_StartY+2*Data_Buffer);
   float Window1_SteppingX = float(Window1_RangeX) / Number_Days;
 
+   //Draw Temperature Max Data
+  stroke(255,0,0);
+  noFill();
+  beginShape();
+  for (int i = 0; i < Number_Days-1; i++) {
+      vertex((i*Window1_SteppingX)+Window1_StartX+Data_Buffer,   Window1_EndY - Data_Buffer - map(days[i].get_tmax(), Min_Min_Temp, Max_Max_Temp, 0, Window1_RangeY));
+  }
+  endShape();
+  
+  //Draw Temperature Min Data
+  stroke(0,0,255);
+  noFill();
+  beginShape();
+  for (int i = 0; i < Number_Days-1; i++) {
+      vertex((i*Window1_SteppingX)+Window1_StartX+Data_Buffer,   Window1_EndY - Data_Buffer - map(days[i].get_tmin(), Min_Min_Temp, Max_Max_Temp, 0, Window1_RangeY));
+  }
+  endShape();
+  
+  
+  //Draw Sleep / Steps Data
+  fill(0,0,0);
+  stroke(0,0,0);
   for (int i = 0; i < Number_Days-1; i++) {
     line((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY-Data_Buffer, (i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
   }
+  
+
 }
 
 int getYAxisValue(int i) {
