@@ -160,7 +160,7 @@ void drawData() {
   stroke(0, 0, 0);
   for (int i = 0; i < Number_Days-1; i++) {
     if (days[i].get_selected()) {
-      stroke(117,107,177);
+      stroke(50,50,255);
       
     }
     else {
@@ -253,7 +253,6 @@ void drawZoom(){
       line(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY-Data_Buffer, ((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window2_RangeY));
     }
   }
-  
 }
 
 void mousePressed() {
