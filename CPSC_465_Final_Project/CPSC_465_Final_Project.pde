@@ -104,7 +104,41 @@ void test_objects() {
   }
 }
 
+int getMaxInt(int col_num){
+  int[] array = new int[data.getRowCount() - 1];  
+  for (int i = 1; i < data.getRowCount(); i++){
+    array[i] = data.getInt(i, col_num);
+}
 
+  return max(array);
+}
+
+float getMaxFloat(int col_num){
+  float[] array = new float[data.getRowCount() - 1];  
+  for (int i = 1; i < data.getRowCount(); i++){
+    array[i] = data.getFloat(i, col_num);
+}
+
+  return max(array);
+}
+
+int getMinInt(int col_num){
+  int[] array = new int[data.getRowCount() - 1];  
+  for (int i = 1; i < data.getRowCount(); i++){
+    array[i] = data.getInt(i, col_num);
+}
+
+  return min(array);
+}
+
+float getMinFloat(int col_num){
+  float[] array = new float[data.getRowCount() - 1];  
+  for (int i = 1; i < data.getRowCount(); i++){
+    array[i] = data.getFloat(i, col_num);
+}
+
+  return min(array);
+}
 
 
 
