@@ -17,7 +17,7 @@ int Window3_EndX;
 int Window3_EndY;
 
 int Window_Buffer = 15;
-int Data_Buffer = 15;
+int Data_Buffer = 50;
 
 float Window1_Width_Percent = .75;
 float Window1_Height_Percent = .667;
