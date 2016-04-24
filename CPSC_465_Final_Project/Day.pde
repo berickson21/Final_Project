@@ -22,7 +22,7 @@ int tmin;
 
   String get_date() {return date;}
   int get_steps() {return steps;}
-  float get_seconds_slept() {return sleep;}
+  int get_seconds_slept() {return sleep;}
   float get_rain() {return rain;}
   int get_tmax() {return tmax;}
   int get_tmin() {return tmin;}

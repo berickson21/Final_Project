@@ -19,6 +19,8 @@ int Data_Buffer = 15;
 float Window1_Width_Percent = .75;
 float Window1_Height_Percent = .667;
 
+String Y_Axis_Variable;
+
 //int[] data;
 
 int Bar_Buffer = 4;
@@ -46,7 +48,8 @@ void setup() {
   loadTable();
   
   frameRate(5);
-   
+  
+  Y_Axis_Variable = "Sleep";
 }
 
 void draw() {
@@ -92,15 +95,19 @@ void drawData() {
   int Window1_RangeX = Window1_EndX - Window1_StartX - 2*Data_Buffer;
   int Window1_RangeY = Window1_EndY - (Window1_StartY+2*Data_Buffer);
   float Window1_SteppingX = float(Window1_RangeX) / Number_Days;
+  
 
   for (int i = 0; i < Number_Days-1; i++) {
-    line((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY-Data_Buffer, (i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(days[i].get_steps(), 0, 25000, 0, Window1_RangeY));
+    line((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY-Data_Buffer, (i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
   }
 }
 
-void test_objects() {
-  for (int i = 0; i < Number_Days -1; i++) {
-    println(days[i].get_seconds_slept() );
+int getYAxisValue(int i) {
+  if (Y_Axis_Variable == "Sleep") {
+    return days[i].get_seconds_slept();
+  }
+  else {
+    return days[i].get_steps();
   }
 }
 
@@ -139,7 +146,6 @@ float getMinFloat(int col_num){
 
   return min(array);
 }
-
 
 
 
