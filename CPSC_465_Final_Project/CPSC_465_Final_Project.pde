@@ -1,15 +1,19 @@
-int Window1_StartX;
+int Window1_StartX; //<>// //<>// //<>//
 int Window1_StartY;
 int Window1_EndX;
 int Window1_EndY;
 int Window1_RangeX;
 int Window1_RangeY;
 float Window1_SteppingX;
+int Window1_Scale_Start;
+int Window1_Scale_End;
 
 int Window2_StartX;
 int Window2_StartY;
 int Window2_EndX;
 int Window2_EndY;
+int Window2_Scale_Start;
+int Window2_Scale_End;
 
 int Window3_StartX;
 int Window3_StartY;
@@ -17,7 +21,7 @@ int Window3_EndX;
 int Window3_EndY;
 
 int Window_Buffer = 15;
-int Data_Buffer = 50;
+int Data_Buffer = 25;
 
 float Window1_Width_Percent = .75;
 float Window1_Height_Percent = .667;
@@ -26,7 +30,7 @@ String Y_Axis_Variable;
 
 //int[] data;
 
-int Bar_Buffer = 4;
+int Bar_Buffer = 4; 
 
 int Number_Days;
 
@@ -51,7 +55,7 @@ float endY;
 boolean dragging;
 
 int Num_Selected;
- int Index_Offset;
+int Index_Offset;
 
 void setup() {
   size(1600, 1000);
@@ -85,12 +89,12 @@ void loadTable() {
 }
 
 void initValues() {
-  Max_Steps       = getMaxInt(1);
+  Max_Steps     = getMaxInt(1);
   Min_Steps     = getMinInt(1);
   Max_Sleep     = getMaxInt(3);
   Min_Sleep     = getMinInt(3);
-  Min_Rain    = getMinFloat(4);
-  Max_Rain    = getMaxFloat(4);
+  Min_Rain      = getMinFloat(4);
+  Max_Rain      = getMaxFloat(4);
   Min_Max_Temp  = getMinInt(6); //This mean Minimum value of the High temperature range.
   Max_Max_Temp  = getMaxInt(6);
   Min_Min_Temp  = getMinInt(7);
@@ -105,6 +109,7 @@ void drawWindows() {
   Window1_EndX = int(width - (3 * Window_Buffer) - (width * (1 - Window1_Width_Percent)));
   Window1_EndY = int(height - (3 * Window_Buffer) - (height * (1 - Window1_Height_Percent)));
   rect(Window1_StartX, Window1_StartY, (Window1_EndX - Window1_StartX), (Window1_EndY - Window1_StartY));
+
 
   Window2_StartX = Window1_StartX;
   Window2_StartY = Window_Buffer + Window1_EndY;
@@ -121,15 +126,42 @@ void drawWindows() {
 
 void drawData() {
   Window1_RangeX = Window1_EndX - Window1_StartX - 2*Data_Buffer;
-  Window1_RangeY = Window1_EndY - (Window1_StartY+2*Data_Buffer);
+  Window1_RangeY = Window1_EndY - (Window1_StartY + 2*Data_Buffer);
   Window1_SteppingX = float(Window1_RangeX) / Number_Days;
+
+
+
+  //Draw Scale
+  stroke(0, 0, 0);
+  fill(0, 0, 0);
+  beginShape(POINTS);
+
+  for (int i = 0; i < Number_Days-1; i++) {
+    vertex((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - 5);
+    strokeWeight(5);
+
+    //Labels beginning of months
+    if (i == 0 || days[i].get_date().equals("1/1/2016")) {
+      vertex((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - 5);
+      text(days[i].get_month_name(), (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - 10);
+    } else if (days[i-1].get_month() < days[i].get_month()) {
+      //println("month change");
+      vertex((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - 5);
+      text(days[i].get_month_name(), (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - 10);
+    }
+
+    strokeWeight(1);
+  }
+
+  endShape();
+  strokeWeight(1);
 
   //Draw Temperature Max Data
   stroke(255, 0, 0);
   noFill();
   beginShape();
   for (int i = 0; i < Number_Days-1; i++) {
-    vertex((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(days[i].get_tmax(), Min_Min_Temp, Max_Max_Temp, 0, Window1_RangeY));
+    vertex((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(days[i].get_tmax(), Min_Min_Temp, Max_Max_Temp, 0, Window1_RangeY));
   }
   endShape();
 
@@ -138,7 +170,7 @@ void drawData() {
   noFill();
   beginShape();
   for (int i = 0; i < Number_Days-1; i++) {
-    vertex((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(days[i].get_tmin(), Min_Min_Temp, Max_Max_Temp, 0, Window1_RangeY));
+    vertex((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(days[i].get_tmin(), Min_Min_Temp, Max_Max_Temp, 0, Window1_RangeY));
   }
   endShape();
 
@@ -149,7 +181,7 @@ void drawData() {
   beginShape(POINTS);
   for (int i = 0; i < Number_Days-1; i++) {
 
-    vertex((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(days[i].get_rain(), Min_Rain, Max_Rain, 0, Window1_RangeY));
+    vertex((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(days[i].get_rain(), Min_Rain, Max_Rain, 0, Window1_RangeY));
   }
   endShape();
 
@@ -160,13 +192,11 @@ void drawData() {
   stroke(0, 0, 0);
   for (int i = 0; i < Number_Days-1; i++) {
     if (days[i].get_selected()) {
-      stroke(50,50,255);
-      
+      stroke(50, 50, 255);
+    } else {
     }
-    else {
-    }
-    line((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY-Data_Buffer, (i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
-    stroke(0,0,0);
+    line((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer, (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
+    stroke(0, 0, 0);
   }
 }
 
@@ -188,13 +218,12 @@ void select_points()
   if (x0 < Window1_EndX - Data_Buffer && x0 > Window1_StartX + Data_Buffer) {
     rect(x0, Window1_EndY, x1 - x0, Window1_StartY - Window1_EndY );
   }
-  
+
   for (int i = 0; i < Number_Days-1; i++) {
     if ((x0 < (i*Window1_SteppingX)+Window1_StartX+Data_Buffer) && (x1 > (i*Window1_SteppingX)+Window1_StartX+Data_Buffer)) {
       Num_Selected++;
       days[i].set_selected(true);
-    }
-    else {
+    } else {
       if (( x0 > (i*Window1_SteppingX)+Window1_StartX+Data_Buffer)) {
         Index_Offset++;
       }
@@ -203,18 +232,41 @@ void select_points()
   }
 }
 
-void drawZoom(){
-  
+void drawZoom() {
+
   int Window2_RangeX = Window2_EndX - Window2_StartX - 2*Data_Buffer;
   int Window2_RangeY = Window2_EndY - (Window2_StartY+2*Data_Buffer);
   float Window2_SteppingX = float(Window2_RangeX) / Num_Selected;
+
+  //Draw Scale
+  stroke(0, 0, 0);
+  fill(0, 0, 0);
+  beginShape(POINTS);
+
+  for (int i = 0; i < Number_Days-1; i++) {
+    if (days[i].get_selected()) {
+      vertex(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - 5);
+
+      strokeWeight(5);
+      //Labels beginning of months
+      if (i == 0 || days[i].get_date().equals("1/1/2016")) {
+        vertex(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - 5);
+        text(days[i].get_month_name(), ((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - 10);
+      } else if (days[i].get_month() > days[i-1].get_month()) {
+        //println("month change");
+        vertex(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - 5);
+        text(days[i].get_month_name(), ((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - 10);
+      }
+    }
+    strokeWeight(1);
+  }
 
   //Draw Temperature Max Data
   stroke(255, 0, 0);
   noFill();
   beginShape();
   for (int i = 0; i < Number_Days-1; i++) {
-    if(days[i].get_selected()) {
+    if (days[i].get_selected()) {
       vertex(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - Data_Buffer - map(days[i].get_tmax(), Min_Min_Temp, Max_Max_Temp, 0, Window2_RangeY));
     }
   }
@@ -225,7 +277,7 @@ void drawZoom(){
   noFill();
   beginShape();
   for (int i = 0; i < Number_Days-1; i++) {
-    if(days[i].get_selected()) {
+    if (days[i].get_selected()) {
       vertex(((i-Index_Offset)*Window2_SteppingX)+Window1_StartX+Data_Buffer, Window2_EndY - Data_Buffer - map(days[i].get_tmin(), Min_Min_Temp, Max_Max_Temp, 0, Window2_RangeY));
     }
   }
@@ -237,7 +289,7 @@ void drawZoom(){
   strokeWeight(5);
   beginShape(POINTS);
   for (int i = 0; i < Number_Days-1; i++) {
-    if(days[i].get_selected()) {
+    if (days[i].get_selected()) {
       vertex(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - Data_Buffer - map(days[i].get_rain(), Min_Rain, Max_Rain, 0, Window2_RangeY));
     }
   }
@@ -249,9 +301,22 @@ void drawZoom(){
   fill(0, 0, 0);
   stroke(0, 0, 0);
   for (int i = 0; i < Number_Days-1; i++) {
-    if(days[i].get_selected()) {
+    if (days[i].get_selected()) {
       line(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY-Data_Buffer, ((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window2_RangeY));
     }
+  }
+  //win3Data();
+}
+
+void win3Data() {
+  fill(0, 0, 0);
+  int line_num = 0;
+  for (int i = 0; i < Number_Days-1; i++) {
+    if (days[i].get_selected()) {
+      text("hello", Window3_StartX +5, Window3_StartY + line_num*3);
+      line_num +=5;
+    } else {
+    };
   }
 }
 
@@ -290,7 +355,6 @@ int getYAxisMaxValue() {
 }
 
 void keyPressed() {
-
   if (keyCode == UP || keyCode == DOWN)
   {
     if (Y_Axis_Variable == "Sleep")
@@ -336,19 +400,21 @@ float getMinFloat(int col_num) {
   return min(array);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-/*
-For the Window 1 panel, this will be a bar graph of the temperature over time with a single point mark on each bar to indicate how many steps were walked, or something like that.
+/* 
+ TODO:
+ label axes with databuffer
+ label window 3 if the data in the selected area is true it's sent to win 2.
+ calculate:
+ min
+ max 
+ avg
+ tot steps 
+ tot sleep
+ start/end date
+ have date follow mouse
+ toggle keys
+ 
+ For the Window 1 panel, this will be a bar graph of the temperature over time with a single point mark on each bar to indicate how many steps were walked, or something like that.
  The visual idiom is still being debated.
  
  The Window 2 panel will be the streched and enhanced version of the data selected from Window 1 with added details such as the weather that day, how much precipitation, etc.
