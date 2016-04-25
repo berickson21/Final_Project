@@ -7,6 +7,7 @@ int sleep;
 float rain;
 int tmax;
 int tmin;
+boolean selected;
 
   
   Day(String date_in, int steps_in, int sleep_in, float rain_in, int tmax_in, int tmin_in) {
@@ -26,5 +27,8 @@ int tmin;
   float get_rain() {return rain;}
   int get_tmax() {return tmax;}
   int get_tmin() {return tmin;}
+  
+  void set_selected(boolean sel){selected = sel;}
+  boolean get_selected(){return selected;}
 
 }
