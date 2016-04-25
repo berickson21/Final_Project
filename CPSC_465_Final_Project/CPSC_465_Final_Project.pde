@@ -81,10 +81,10 @@ void draw() {
 void loadTable() {  
 
   data = loadTable("data.csv");
-  Number_Days = data.getRowCount()-1;
+  Number_Days = data.getRowCount();
 
   days = new Day[Number_Days];
-  for (int i = 0; i < Number_Days - 1; i++) {
+  for (int i = 0; i < Number_Days-1; i++) {
     days[i] = new Day(data.getString(i+1, 0), data.getInt(i+1, 1), data.getInt(i+1, 3), data.getFloat(i+1, 4), data.getInt(i+1, 6), data.getInt(i+1, 7) );
   }
 }
@@ -195,13 +195,9 @@ void drawData() {
     if (days[i].get_selected()) {
       stroke(50, 50, 255);
     } else {
-    }
-<<<<<<< HEAD
-    line((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer, (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
-=======
-    line((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY-Data_Buffer, (i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
->>>>>>> origin/master
-    stroke(0, 0, 0);
+  }
+  line((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer, (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
+  stroke(0, 0, 0);
   }
 }
 
@@ -327,11 +323,14 @@ void win3Data() {
 
 void drawDate() {
   int i = get_index(mouseX);
-  text(days[i].get_date(), mouseX, Window1_EndY - 25);
+  textAlign(CENTER);
+  if (( mouseX > Window1_StartX + Data_Buffer) && (mouseX < Window1_EndX - Data_Buffer) && (mouseY > Window1_StartY) && (mouseY < Window1_EndY)) {
+    text(days[i].get_date(), mouseX, Window1_EndY - 25);
+  }
 }
 
 int get_index(float mouseX) {
-  float index = mouseX / (Window1_EndX - Window1_StartX - Data_Buffer) * Number_Days;
+  float index = (mouseX - Window1_StartX - Data_Buffer) / (Window1_EndX - Window1_StartX - 2*Data_Buffer) * Number_Days;
   int i = int(index);
   if (i >= Number_Days - 2)
     return Number_Days - 2;
@@ -387,7 +386,7 @@ void keyPressed() {
 
 int getMaxInt(int col_num) {
   int[] array = new int[data.getRowCount() - 1];  
-  for (int i = 0; i < Number_Days; i++) {
+  for (int i = 0; i < Number_Days-1; i++) {
     array[i] = data.getInt(i+1, col_num);
   }
 
@@ -396,7 +395,7 @@ int getMaxInt(int col_num) {
 
 float getMaxFloat(int col_num) {
   float[] array = new float[data.getRowCount() - 1];  
-  for (int i = 0; i < Number_Days; i++) {
+  for (int i = 0; i < Number_Days-1; i++) {
     array[i] = data.getFloat(i+1, col_num);
   }
 
@@ -405,7 +404,7 @@ float getMaxFloat(int col_num) {
 
 int getMinInt(int col_num) {
   int[] array = new int[data.getRowCount() - 1];  
-  for (int i = 0; i < Number_Days; i++) {
+  for (int i = 0; i < Number_Days-1; i++) {
     array[i] = data.getInt(i+1, col_num);
   }
 
@@ -414,7 +413,7 @@ int getMinInt(int col_num) {
 
 float getMinFloat(int col_num) {
   float[] array = new float[data.getRowCount() - 1];  
-  for (int i = 0; i < Number_Days; i++) {
+  for (int i = 0; i < Number_Days-1; i++) {
     array[i] = data.getFloat(i+1, col_num);
   }
 
