@@ -51,7 +51,7 @@ float endY;
 boolean dragging;
 
 int Num_Selected;
- int Index_Offset;
+int Index_Offset;
 
 void setup() {
   size(1600, 1000);
@@ -71,6 +71,7 @@ void draw() {
   drawData();
   drawHighlight();
   drawZoom();
+  drawDate();
 }
 
 void loadTable() {  
@@ -160,13 +161,11 @@ void drawData() {
   stroke(0, 0, 0);
   for (int i = 0; i < Number_Days-1; i++) {
     if (days[i].get_selected()) {
-      stroke(50,50,255);
-      
-    }
-    else {
+      stroke(50, 50, 255);
+    } else {
     }
     line((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY-Data_Buffer, (i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
-    stroke(0,0,0);
+    stroke(0, 0, 0);
   }
 }
 
@@ -188,13 +187,12 @@ void select_points()
   if (x0 < Window1_EndX - Data_Buffer && x0 > Window1_StartX + Data_Buffer) {
     rect(x0, Window1_EndY, x1 - x0, Window1_StartY - Window1_EndY );
   }
-  
+
   for (int i = 0; i < Number_Days-1; i++) {
     if ((x0 < (i*Window1_SteppingX)+Window1_StartX+Data_Buffer) && (x1 > (i*Window1_SteppingX)+Window1_StartX+Data_Buffer)) {
       Num_Selected++;
       days[i].set_selected(true);
-    }
-    else {
+    } else {
       if (( x0 > (i*Window1_SteppingX)+Window1_StartX+Data_Buffer)) {
         Index_Offset++;
       }
@@ -203,8 +201,8 @@ void select_points()
   }
 }
 
-void drawZoom(){
-  
+void drawZoom() {
+
   int Window2_RangeX = Window2_EndX - Window2_StartX - 2*Data_Buffer;
   int Window2_RangeY = Window2_EndY - (Window2_StartY+2*Data_Buffer);
   float Window2_SteppingX = float(Window2_RangeX) / Num_Selected;
@@ -214,7 +212,7 @@ void drawZoom(){
   noFill();
   beginShape();
   for (int i = 0; i < Number_Days-1; i++) {
-    if(days[i].get_selected()) {
+    if (days[i].get_selected()) {
       vertex(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - Data_Buffer - map(days[i].get_tmax(), Min_Min_Temp, Max_Max_Temp, 0, Window2_RangeY));
     }
   }
@@ -225,7 +223,7 @@ void drawZoom(){
   noFill();
   beginShape();
   for (int i = 0; i < Number_Days-1; i++) {
-    if(days[i].get_selected()) {
+    if (days[i].get_selected()) {
       vertex(((i-Index_Offset)*Window2_SteppingX)+Window1_StartX+Data_Buffer, Window2_EndY - Data_Buffer - map(days[i].get_tmin(), Min_Min_Temp, Max_Max_Temp, 0, Window2_RangeY));
     }
   }
@@ -237,7 +235,7 @@ void drawZoom(){
   strokeWeight(5);
   beginShape(POINTS);
   for (int i = 0; i < Number_Days-1; i++) {
-    if(days[i].get_selected()) {
+    if (days[i].get_selected()) {
       vertex(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - Data_Buffer - map(days[i].get_rain(), Min_Rain, Max_Rain, 0, Window2_RangeY));
     }
   }
@@ -249,10 +247,26 @@ void drawZoom(){
   fill(0, 0, 0);
   stroke(0, 0, 0);
   for (int i = 0; i < Number_Days-1; i++) {
-    if(days[i].get_selected()) {
+    if (days[i].get_selected()) {
       line(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY-Data_Buffer, ((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window2_RangeY));
     }
   }
+}
+
+void drawDate() {
+  int i = get_index(mouseX);
+  text(days[i].get_date(), mouseX, Window1_EndY - 25);
+}
+
+int get_index(float mouseX) {
+  float index = mouseX / (Window1_EndX - Window1_StartX - Data_Buffer) * Number_Days;
+  int i = int(index);
+  if (i >= Number_Days - 2)
+    return Number_Days - 2;
+  else if (i < 0)
+    return 0;
+  else
+    return i;
 }
 
 void mousePressed() {
