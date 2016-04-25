@@ -75,6 +75,7 @@ void draw() {
   drawData();
   drawHighlight();
   drawZoom();
+  drawDate();
 }
 
 void loadTable() {  
@@ -195,7 +196,11 @@ void drawData() {
       stroke(50, 50, 255);
     } else {
     }
+<<<<<<< HEAD
     line((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer, (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
+=======
+    line((i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY-Data_Buffer, (i*Window1_SteppingX)+Window1_StartX+Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
+>>>>>>> origin/master
     stroke(0, 0, 0);
   }
 }
@@ -318,6 +323,22 @@ void win3Data() {
     } else {
     };
   }
+}
+
+void drawDate() {
+  int i = get_index(mouseX);
+  text(days[i].get_date(), mouseX, Window1_EndY - 25);
+}
+
+int get_index(float mouseX) {
+  float index = mouseX / (Window1_EndX - Window1_StartX - Data_Buffer) * Number_Days;
+  int i = int(index);
+  if (i >= Number_Days - 2)
+    return Number_Days - 2;
+  else if (i < 0)
+    return 0;
+  else
+    return i;
 }
 
 void mousePressed() {
