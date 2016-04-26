@@ -202,7 +202,7 @@ void drawData() {
 }
 
 void drawHighlight() {
-  if (dragging) {
+  if (dragging && (Window1_StartX < mouseX) && (mouseX < Window1_EndX) && (mouseY > Window1_StartY) && (mouseY < Window1_EndY)) {
     endX = mouseX;
     select_points();
   }
@@ -216,9 +216,20 @@ void select_points()
   Num_Selected = 0;
   Index_Offset = 0;
 
-  if (x0 < Window1_EndX - Data_Buffer && x0 > Window1_StartX + Data_Buffer) {
-    rect(x0, Window1_EndY, x1 - x0, Window1_StartY - Window1_EndY );
+  //if (x1 < Window1_EndX - Data_Buffer && x0 > Window1_StartX + Data_Buffer) {
+  if ( x0 < Window1_StartX + Data_Buffer ) {
+    x0 = Window1_StartX + Data_Buffer;
   }
+  if ( x1 > Window1_EndX - Data_Buffer ) {
+    x1 = Window1_EndX - Data_Buffer;
+  }
+  if ( x0 > Window1_EndX - Data_Buffer ) {
+    x0 = Window1_EndX - Data_Buffer;
+  }
+  if ( x1 < Window1_StartX + Data_Buffer ) {
+    x1 = Window1_StartX + Data_Buffer;
+  }
+  rect(x0, Window1_EndY, x1 - x0, Window1_StartY - Window1_EndY );
 
   for (int i = 0; i < Number_Days-1; i++) {
     if ((x0 < (i*Window1_SteppingX)+Window1_StartX+Data_Buffer) && (x1 > (i*Window1_SteppingX)+Window1_StartX+Data_Buffer)) {
@@ -342,7 +353,12 @@ int get_index(float mouseX) {
 
 void mousePressed() {
   dragging = true;
-  startX = mouseX;
+  if ((Window1_StartX < mouseX) && (mouseX < Window1_EndX) && (mouseY > Window1_StartY) && (mouseY < Window1_EndY)) {
+    startX = mouseX;
+  }
+  else {
+    startX = Window1_StartX + Data_Buffer;
+  }
 }
 
 void mouseReleased() {
