@@ -1,4 +1,4 @@
-int Window1_StartX; //<>// //<>//
+int Window1_StartX; //<>//
 int Window1_StartY;
 int Window1_EndX;
 int Window1_EndY;
@@ -538,15 +538,19 @@ void write_step_data(int Window3_Midpoint)
       }
     }
 
-    text("Total steps: " + total_steps, Window3_Midpoint, Window3_StartY + 105);
-    text("Average steps: " + average_steps, Window3_Midpoint, Window3_StartY + 135);
-    
+    int max_steps = 0;
+    for (int i = 0; i < Number_Days - 1; i++)
+      max_steps += days[i].get_steps();
     
     if (steps_array.length == 0){
-      text("Max steps: 0", Window3_Midpoint, Window3_StartY + 165);
-      text("Min steps: 0", Window3_Midpoint, Window3_StartY + 195);
+      text("Total steps: " + max_steps, Window3_Midpoint, Window3_StartY + 105);
+      text("Average steps: " + max_steps / Number_Days, Window3_Midpoint, Window3_StartY + 135);
+      text("Max steps: " + getMaxInt(STEPS), Window3_Midpoint, Window3_StartY + 165);
+      text("Min steps: " + getMinInt(STEPS), Window3_Midpoint, Window3_StartY + 195);
     }
     else{
+      text("Total steps: " + total_steps, Window3_Midpoint, Window3_StartY + 105);
+      text("Average steps: " + average_steps, Window3_Midpoint, Window3_StartY + 135);
       text("Max steps:" + max(steps_array), Window3_Midpoint, Window3_StartY + 165);
       text("Min steps:" + min(steps_array), Window3_Midpoint, Window3_StartY + 195);
     }  
@@ -574,13 +578,20 @@ void write_sleep_data(int Window3_Midpoint){
       }
     }
 
-    text("Total sleep (hrs): " + total_sleep / (60*60), Window3_Midpoint, Window3_StartY + 105);
-    text("Average sleep (hrs): " + average_sleep / (60*60), Window3_Midpoint, Window3_StartY + 135);
+    float max_sleep = 0;
+    for (int i = 0; i < Number_Days - 1; i++)
+      max_sleep += days[i].get_seconds_slept();
+      
+      
     if (sleep_array.length == 0){
-      text("Max sleep (hrs): 0", Window3_Midpoint, Window3_StartY + 165);
-      text("Min sleep (hrs): 0", Window3_Midpoint, Window3_StartY + 195);
+      text("Total sleep (hrs): " + max_sleep / (60*60), Window3_Midpoint, Window3_StartY + 105);
+      text("Average sleep (hrs): " + ( max_sleep / (60*60) ) / Number_Days, Window3_Midpoint, Window3_StartY + 135);
+      text("Max sleep (hrs): " + getMaxInt(SLEEP) / (60*60), Window3_Midpoint, Window3_StartY + 165);
+      text("Min sleep (hrs): " + getMinInt(SLEEP) / (60*60), Window3_Midpoint, Window3_StartY + 195);
     }
     else{
+      text("Total sleep (hrs): " + total_sleep / (60*60), Window3_Midpoint, Window3_StartY + 105);
+      text("Average sleep (hrs): " + average_sleep / (60*60), Window3_Midpoint, Window3_StartY + 135);
       text("Max sleep (hrs):" + max(sleep_array), Window3_Midpoint, Window3_StartY + 165);
       text("Min sleep (hrs):" + min(sleep_array), Window3_Midpoint, Window3_StartY + 195);
     }
@@ -610,17 +621,32 @@ void write_temp_data(int Window3_Midpoint)
       average_temp += avg_temp_array[i];
     }
     average_temp /= Num_Selected;
-    
-    text("Average temp (F): " + round(average_temp), Window3_Midpoint, Window3_StartY + 350);
-    
+        
     if (min_temp_array.length != 0)
       println(min(min_temp_array));
     
+    int total_max[] = new int[Number_Days];
+    int total_min[] = new int[Number_Days];
+    int total_avg[] = new int[Number_Days];
+    for (int i = 0; i < Number_Days - 1; i ++){
+          total_max[i] = days[i].get_tmax();
+          total_min[i] = days[i].get_tmin();
+          total_avg[i] = ( total_max[i] + total_min[i] ) / 2;
+    }
+    
+    int overall_avg = 0;
+    for (int i = 0; i < Number_Days - 1; i++ )
+      overall_avg += total_avg[i];
+      
+    overall_avg /= Number_Days;
+    
     if (max_temp_array.length == 0 ){
-      text("Max temp (F): 0", Window3_Midpoint, Window3_StartY + 380);
-      text("Min temp (F): 0", Window3_Midpoint, Window3_StartY + 410);
+      text("Average temp (F): " + overall_avg, Window3_Midpoint, Window3_StartY + 350);
+      text("Max temp (F): " + getMaxInt(MAXTEMP), Window3_Midpoint, Window3_StartY + 380);
+      text("Min temp (F): " + getMinInt(MINTEMP), Window3_Midpoint, Window3_StartY + 410);
     }
     else{
+      text("Average temp (F): " + round(average_temp), Window3_Midpoint, Window3_StartY + 350);
       text("Max temp (F): " + max(max_temp_array) , Window3_Midpoint, Window3_StartY + 380);
       text("Min temp (F): " + min(min_temp_array), Window3_Midpoint, Window3_StartY + 410);
     }
@@ -649,15 +675,24 @@ void write_rain_data(int Window3_Midpoint)
       num_entries += 1;
     }
   }
+  
 
-  text("Total rain (in.): " + total_rain, Window3_Midpoint, Window3_StartY + 230);
-  text("Average rain (in.): " + average_rain, Window3_Midpoint, Window3_StartY + 260);
+  float max_rain = 0;
+    for (int i = 0; i < Number_Days - 1; i++)
+      max_rain += days[i].get_rain();
+      
+  
+
   
   if ( rain_array.length == 0 ){
-  text("Max rain (in.): 0", Window3_Midpoint, Window3_StartY + 290);
-  text("Min rain (in.): 0", Window3_Midpoint, Window3_StartY + 320); 
+  text("Total rain (in.): " + max_rain, Window3_Midpoint, Window3_StartY + 230);
+  text("Average rain (in.): " + max_rain / Number_Days, Window3_Midpoint, Window3_StartY + 260);
+  text("Max rain (in.): " + getMaxFloat(RAIN), Window3_Midpoint, Window3_StartY + 290);
+  text("Min rain (in.): " + getMinFloat(RAIN), Window3_Midpoint, Window3_StartY + 320); 
   }
   else{
+  text("Total rain (in.): " + total_rain, Window3_Midpoint, Window3_StartY + 230);
+  text("Average rain (in.): " + average_rain, Window3_Midpoint, Window3_StartY + 260);
   text("Max rain (in.):" + max(rain_array), Window3_Midpoint, Window3_StartY + 290);
   text("Min rain (in.):" + min(rain_array), Window3_Midpoint, Window3_StartY + 320);
   }
