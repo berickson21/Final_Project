@@ -76,6 +76,7 @@ void draw() {
   drawHighlight();
   drawZoom();
   drawDate();
+  drawAnalytics();
 }
 
 void loadTable() {  
@@ -135,6 +136,8 @@ void drawData() {
   //Draw Scale
   stroke(0, 0, 0);
   fill(0, 0, 0);
+  
+  textSize(14);
   beginShape(POINTS);
 
   for (int i = 0; i < Number_Days-1; i++) {
@@ -178,7 +181,7 @@ void drawData() {
   //Draw Rain Data
   stroke(117, 107, 177);
   //noFill();
-  strokeWeight(5);
+  strokeWeight(8);
   beginShape(POINTS);
   for (int i = 0; i < Number_Days-1; i++) {
 
@@ -242,6 +245,7 @@ void select_points()
       days[i].set_selected(false);
     }
   }
+  //drawAnalytics(x0, x1);
 }
 
 void drawZoom() {
@@ -253,6 +257,8 @@ void drawZoom() {
   //Draw Scale
   stroke(0, 0, 0);
   fill(0, 0, 0);
+  
+  textSize(14);
   beginShape(POINTS);
 
   for (int i = 0; i < Number_Days-1; i++) {
@@ -298,7 +304,7 @@ void drawZoom() {
   //Draw Rain Data
   stroke(117, 107, 177);
   //noFill();
-  strokeWeight(5);
+  strokeWeight(8);
   beginShape(POINTS);
   for (int i = 0; i < Number_Days-1; i++) {
     if (days[i].get_selected()) {
@@ -317,24 +323,67 @@ void drawZoom() {
       line(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY-Data_Buffer, ((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window2_RangeY));
     }
   }
-  //win3Data();
 }
 
-void win3Data() {
-  fill(0, 0, 0);
-  int line_num = 0;
-  for (int i = 0; i < Number_Days-1; i++) {
-    if (days[i].get_selected()) {
-      text("hello", Window3_StartX +5, Window3_StartY + line_num*3);
-      line_num +=5;
-    } else {
-    };
+//void win3Data() {
+//  fill(0, 0, 0);
+//  int line_num = 0;
+//  for (int i = 0; i < Number_Days-1; i++) {
+//    if (days[i].get_selected()) {
+//      text("hello", Window3_StartX +5, Window3_StartY + line_num*3);
+//      line_num +=5;
+//    } else {
+//    };
+//  }
+//}
+
+void drawAnalytics() {
+  textAlign(CENTER);
+  textSize(20);
+  fill(0,0,0);
+  
+  int x0 = 0;
+  int x1 = 0;
+  println(Num_Selected);
+  if(Num_Selected == 0) {
+    //Show analysis on all data
+    x0 = 0;
+    x1 = Number_Days - 2;
   }
+  
+  if(Num_Selected > 0) {
+    x0 = getMinSelectedIndex();
+    x1 = getMaxSelectedIndex();
+  }
+  
+  int Window3_Midpoint = (Window3_StartX + Window3_EndX) / 2; 
+  text("Start date: " + days[x0].get_date(), Window3_Midpoint, Window3_StartY + 45);
+  text("End date: " + days[x1].get_date(), Window3_Midpoint, Window3_StartY + 75);
+  //Total Steps
+  //Average Steps
+  //Max Steps
+  //Min Steps
+  
+  //Total Sleep
+  //Average Sleep
+  //Max Sleep
+  //Min Sleep
+  
+  //Average Temperature
+  //Max Temperature
+  //Min Temperature
+  
+  //Total Rainfall
+  //Average Rainfall
+  //Max Rainfall
+  //Min Rainfall
+
 }
 
 void drawDate() {
   int i = get_index(mouseX);
   textAlign(CENTER);
+  textSize(12);
   if (( mouseX > Window1_StartX + Data_Buffer) && (mouseX < Window1_EndX - Data_Buffer) && (mouseY > Window1_StartY) && (mouseY < Window1_EndY)) {
     text(days[i].get_date(), mouseX, Window1_EndY - 25);
   }
@@ -434,6 +483,37 @@ float getMinFloat(int col_num) {
   }
 
   return min(array);
+}
+
+int getMinSelectedIndex() {
+  
+  int[] array = new int[Num_Selected];
+  if(Num_Selected > 0) {
+    int j = 0;
+    for (int i = 0; i < Number_Days - 1; i++) {
+      if(days[i].get_selected()) {
+        array[j] = i;
+        j++;
+      }
+    }
+    return min(array);
+  }
+  return -1;
+}
+
+int getMaxSelectedIndex() {
+  if(Num_Selected > 0) {
+    int[] array = new int[Num_Selected];
+    int j = 0;
+    for (int i = 0; i < Number_Days - 1; i++) {
+      if(days[i].get_selected()) {
+        array[j] = i;
+        j++;
+      }
+    }
+    return max(array);
+  }
+  return -1;
 }
 
 /* 
