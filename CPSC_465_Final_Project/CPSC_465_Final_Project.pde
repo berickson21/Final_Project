@@ -1,4 +1,4 @@
-int Window1_StartX; //<>// //<>// //<>//
+int Window1_StartX; //<>// //<>//
 int Window1_StartY;
 int Window1_EndX;
 int Window1_EndY;
@@ -27,6 +27,12 @@ float Window1_Width_Percent = .75;
 float Window1_Height_Percent = .667;
 
 String Y_Axis_Variable;
+
+int STEPS = 1;
+int SLEEP = 3;
+int RAIN = 4;
+int MINTEMP = 6;
+int MAXTEMP = 7;
 
 //int[] data;
 
@@ -136,7 +142,7 @@ void drawData() {
   //Draw Scale
   stroke(0, 0, 0);
   fill(0, 0, 0);
-  
+
   textSize(14);
   beginShape(POINTS);
 
@@ -198,9 +204,9 @@ void drawData() {
     if (days[i].get_selected()) {
       stroke(50, 50, 255);
     } else {
-  }
-  line((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer, (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
-  stroke(0, 0, 0);
+    }
+    line((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer, (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
+    stroke(0, 0, 0);
   }
 }
 
@@ -257,7 +263,7 @@ void drawZoom() {
   //Draw Scale
   stroke(0, 0, 0);
   fill(0, 0, 0);
-  
+
   textSize(14);
   beginShape(POINTS);
 
@@ -340,44 +346,112 @@ void drawZoom() {
 void drawAnalytics() {
   textAlign(CENTER);
   textSize(20);
-  fill(0,0,0);
-  
+  fill(0, 0, 0);
+
   int x0 = 0;
   int x1 = 0;
-  println(Num_Selected);
-  if(Num_Selected == 0) {
+  //println(Num_Selected);
+  if (Num_Selected == 0) {
     //Show analysis on all data
     x0 = 0;
     x1 = Number_Days - 2;
   }
-  
-  if(Num_Selected > 0) {
+
+  if (Num_Selected > 0) {
     x0 = getMinSelectedIndex();
     x1 = getMaxSelectedIndex();
   }
-  
+
   int Window3_Midpoint = (Window3_StartX + Window3_EndX) / 2; 
   text("Start date: " + days[x0].get_date(), Window3_Midpoint, Window3_StartY + 45);
   text("End date: " + days[x1].get_date(), Window3_Midpoint, Window3_StartY + 75);
   //Total Steps
+  if (Y_Axis_Variable == "Steps") {
+    int total_steps = 0;
+    for (int i = 0; i < Number_Days - 1; i ++) {
+      if ( days[i].get_selected() )
+        total_steps += days[i].get_steps();
+    }
+
+    float average_steps;
+    if (Num_Selected == 0 )
+      average_steps = 0;
+    else
+      average_steps = total_steps / Num_Selected;
+
+    int[] steps_array = new int[Number_Days];   
+    for (int i = 0; i < Number_Days - 1; i++) {
+      if (days[i].get_selected() )
+        steps_array[i] = days[i].get_steps();
+    }
+
+    text("Total steps: " + total_steps, Window3_Midpoint, Window3_StartY + 105);
+    text("Average steps: " + average_steps, Window3_Midpoint, Window3_StartY + 135);
+    text("Max steps:" + max(steps_array), Window3_Midpoint, Window3_StartY + 165);
+    text("Min steps:" + min(steps_array), Window3_Midpoint, Window3_StartY + 195);
+  } 
   //Average Steps
   //Max Steps
   //Min Steps
-  
+
   //Total Sleep
   //Average Sleep
   //Max Sleep
   //Min Sleep
-  
+  if (Y_Axis_Variable == "Sleep") {
+    int total_sleep = 0;
+    for (int i = 0; i < Number_Days - 1; i ++) {
+      if ( days[i].get_selected() )
+        total_sleep += days[i].get_seconds_slept();
+    }
+
+    float average_sleep;
+    if (Num_Selected == 0 )
+      average_sleep = 0;
+    else
+      average_sleep = total_sleep / Num_Selected;
+
+    float[] sleep_array = new float[Number_Days];   
+    for (int i = 0; i < Number_Days - 1; i++) {
+      if (days[i].get_selected() )
+        sleep_array[i] = days[i].get_seconds_slept() / (60 * 60);
+    }
+
+    text("Total sleep (hrs): " + total_sleep / (60*60), Window3_Midpoint, Window3_StartY + 105);
+    text("Average sleep (hrs): " + average_sleep / (60*60), Window3_Midpoint, Window3_StartY + 135);
+    text("Max sleep (hrs):" + max(sleep_array), Window3_Midpoint, Window3_StartY + 165);
+    text("Min sleep (hrs):" + min(sleep_array), Window3_Midpoint, Window3_StartY + 195);
+  } 
   //Average Temperature
   //Max Temperature
   //Min Temperature
-  
+
   //Total Rainfall
   //Average Rainfall
   //Max Rainfall
   //Min Rainfall
+  float total_rain = 0;
+  for (int i = 0; i < Number_Days - 1; i ++) {
+    if ( days[i].get_selected() )
+      total_rain += days[i].get_rain();
+  }
 
+  float average_rain;
+  if (Num_Selected == 0 )
+    average_rain = 0;
+  else
+    average_rain = total_rain / Num_Selected;
+
+  float[] rain_array = new float[Number_Days];   
+  for (int i = 0; i < Number_Days - 1; i++) {
+    if (days[i].get_selected() )
+      rain_array[i] = days[i].get_rain();
+  }
+
+  text("Total rain (in.): " + total_rain, Window3_Midpoint, Window3_StartY + 225);
+  text("Average rain (in.): " + average_rain, Window3_Midpoint, Window3_StartY + 255);
+  text("Max rain (in.):" + max(rain_array), Window3_Midpoint, Window3_StartY + 285);
+  text("Min rain (in.):" + min(rain_array), Window3_Midpoint, Window3_StartY + 315);
 }
 
 void drawDate() {
@@ -404,8 +478,7 @@ void mousePressed() {
   dragging = true;
   if ((Window1_StartX < mouseX) && (mouseX < Window1_EndX) && (mouseY > Window1_StartY) && (mouseY < Window1_EndY)) {
     startX = mouseX;
-  }
-  else {
+  } else {
     startX = Window1_StartX + Data_Buffer;
   }
 }
@@ -486,12 +559,12 @@ float getMinFloat(int col_num) {
 }
 
 int getMinSelectedIndex() {
-  
+
   int[] array = new int[Num_Selected];
-  if(Num_Selected > 0) {
+  if (Num_Selected > 0) {
     int j = 0;
     for (int i = 0; i < Number_Days - 1; i++) {
-      if(days[i].get_selected()) {
+      if (days[i].get_selected()) {
         array[j] = i;
         j++;
       }
@@ -502,11 +575,11 @@ int getMinSelectedIndex() {
 }
 
 int getMaxSelectedIndex() {
-  if(Num_Selected > 0) {
+  if (Num_Selected > 0) {
     int[] array = new int[Num_Selected];
     int j = 0;
     for (int i = 0; i < Number_Days - 1; i++) {
-      if(days[i].get_selected()) {
+      if (days[i].get_selected()) {
         array[j] = i;
         j++;
       }
