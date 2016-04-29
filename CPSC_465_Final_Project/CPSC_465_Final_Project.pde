@@ -1,4 +1,4 @@
-int Window1_StartX; //<>//
+int Window1_StartX;
 int Window1_StartY;
 int Window1_EndX;
 int Window1_EndY;
@@ -642,8 +642,8 @@ void write_temp_data(int Window3_Midpoint)
     
     if (max_temp_array.length == 0 ){
       text("Average temp (F): " + overall_avg, Window3_Midpoint, Window3_StartY + 350);
-      text("Max temp (F): " + getMaxInt(MAXTEMP), Window3_Midpoint, Window3_StartY + 380);
-      text("Min temp (F): " + getMinInt(MINTEMP), Window3_Midpoint, Window3_StartY + 410);
+      text("Max temp (F): " + Max_Max_Temp, Window3_Midpoint, Window3_StartY + 380);
+      text("Min temp (F): " + Min_Min_Temp, Window3_Midpoint, Window3_StartY + 410);
     }
     else{
       text("Average temp (F): " + round(average_temp), Window3_Midpoint, Window3_StartY + 350);
