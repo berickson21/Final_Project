@@ -129,8 +129,13 @@ void drawWindows() {
   Window3_EndX = width - Window_Buffer;
   Window3_EndY = height - Window_Buffer;  
   rect(Window3_StartX, Window3_StartY, (Window3_EndX - Window3_StartX), (Window3_EndY - Window3_StartY));
+<<<<<<< HEAD
     
   fill(0,0,0);
+=======
+  
+  fill(0, 0, 0);
+>>>>>>> origin/master
   textSize(25);
   text(Y_Axis_Variable, (Window1_EndX - Window1_StartX)/2 + Window1_StartX, Window1_StartY + 30);
 }
@@ -210,6 +215,28 @@ void drawData() {
     line((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer, (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
     stroke(0, 0, 0);
   }
+  
+  textSize(10);
+  textAlign(LEFT);
+  fill(255, 0, 0);
+  text(" Max temp: " + Max_Max_Temp, Window1_StartX, Window1_StartY + Data_Buffer);
+  fill(0, 0, 255);
+  text(" Min temp: " + Min_Min_Temp, Window1_StartX, Window1_EndY - Data_Buffer-10);
+  fill(0, 0, 0);
+  textAlign(RIGHT);
+  if (Y_Axis_Variable.equals("Steps")) {
+    text("Max steps: " + Max_Steps + "\n", Window1_EndX, Window1_StartY + Data_Buffer);
+    text("Min steps: " + Min_Steps + "\n", Window1_EndX, Window1_EndY - Data_Buffer);
+  }
+  if (Y_Axis_Variable.equals("Sleep")) {
+    text("Sleep: " + Max_Sleep, Window1_EndX, Window1_StartY + Data_Buffer);
+    text("Sleep: " + Min_Sleep, Window1_EndX, Window1_EndY - Data_Buffer);
+  }
+  fill(117, 107, 177);
+  text("Max rain: " + Max_Rain, Window1_EndX, Window1_StartY + Data_Buffer + 10);
+  text("Max rain: " + Min_Rain, Window1_EndX, Window1_EndY - Data_Buffer-10);
+    
+  textSize(15);
 }
 
 void drawHighlight() {
@@ -688,4 +715,36 @@ void write_rain_data(int Window3_Midpoint)
   text("Max rain (in.):" + max(rain_array), Window3_Midpoint, Window3_StartY + 290);
   text("Min rain (in.):" + min(rain_array), Window3_Midpoint, Window3_StartY + 320);
   }
+<<<<<<< HEAD
 }
+=======
+}
+
+/* 
+ TODO:
+ label axes with databuffer
+ label window 3 if the data in the selected area is true it's sent to win 2.
+ calculate:
+ min
+ max 
+ avg
+ tot steps 
+ tot sleep
+ start/end date
+ have date follow mouse
+ toggle keys
+ 
+ For the Window 1 panel, this will be a bar graph of the temperature over time with a single point mark on each bar to indicate how many steps were walked, or something like that.
+ The visual idiom is still being debated.
+ 
+ The Window 2 panel will be the streched and enhanced version of the data selected from Window 1 with added details such as the weather that day, how much precipitation, etc.
+ 
+ The window 3 panel will have the summary information from the Window 2 such as the average temperature during this time, the total number of steps, the number of days included in this
+ selection, the begin date and end date, Standard deviation of the number of steps walked, avg precipitation over these days, etc.
+ 
+ The window should be recizable and the data being shown should resize with the window as well. Including the text in the Window 3 panel.
+ 
+ Should be able to sort data based on precipitation
+ 
+ */
+>>>>>>> origin/master
