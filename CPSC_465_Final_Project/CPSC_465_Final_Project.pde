@@ -130,6 +130,10 @@ void drawWindows() {
   Window3_EndX = width - Window_Buffer;
   Window3_EndY = height - Window_Buffer;  
   rect(Window3_StartX, Window3_StartY, (Window3_EndX - Window3_StartX), (Window3_EndY - Window3_StartY));
+  
+  fill(0, 0, 0);
+  textSize(25);
+  text(Y_Axis_Variable, (Window1_EndX - Window1_StartX)/2 + Window1_StartX, Window1_StartY + 30);
 }
 
 void drawData() {
@@ -208,6 +212,28 @@ void drawData() {
     line((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer, (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - Data_Buffer - map(getYAxisValue(i), getYAxisMinValue(), getYAxisMaxValue(), 0, Window1_RangeY));
     stroke(0, 0, 0);
   }
+  
+  textSize(10);
+  textAlign(LEFT);
+  fill(255, 0, 0);
+  text(" Max temp: " + Max_Max_Temp, Window1_StartX, Window1_StartY + Data_Buffer);
+  fill(0, 0, 255);
+  text(" Min temp: " + Min_Min_Temp, Window1_StartX, Window1_EndY - Data_Buffer-10);
+  fill(0, 0, 0);
+  textAlign(RIGHT);
+  if (Y_Axis_Variable.equals("Steps")) {
+    text("Max steps: " + Max_Steps + "\n", Window1_EndX, Window1_StartY + Data_Buffer);
+    text("Min steps: " + Min_Steps + "\n", Window1_EndX, Window1_EndY - Data_Buffer);
+  }
+  if (Y_Axis_Variable.equals("Sleep")) {
+    text("Sleep: " + Max_Sleep, Window1_EndX, Window1_StartY + Data_Buffer);
+    text("Sleep: " + Min_Sleep, Window1_EndX, Window1_EndY - Data_Buffer);
+  }
+  fill(117, 107, 177);
+  text("Max rain: " + Max_Rain, Window1_EndX, Window1_StartY + Data_Buffer + 10);
+  text("Max rain: " + Min_Rain, Window1_EndX, Window1_EndY - Data_Buffer-10);
+    
+  textSize(15);
 }
 
 void drawHighlight() {
