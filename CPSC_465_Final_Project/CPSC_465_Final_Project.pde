@@ -118,7 +118,6 @@ void drawWindows() {
   Window1_EndY = int(height - (3 * Window_Buffer) - (height * (1 - Window1_Height_Percent)));
   rect(Window1_StartX, Window1_StartY, (Window1_EndX - Window1_StartX), (Window1_EndY - Window1_StartY));
 
-
   Window2_StartX = Window1_StartX;
   Window2_StartY = Window_Buffer + Window1_EndY;
   Window2_EndX = Window1_EndX;
@@ -130,6 +129,10 @@ void drawWindows() {
   Window3_EndX = width - Window_Buffer;
   Window3_EndY = height - Window_Buffer;  
   rect(Window3_StartX, Window3_StartY, (Window3_EndX - Window3_StartX), (Window3_EndY - Window3_StartY));
+    
+  fill(0,0,0);
+  textSize(25);
+  text(Y_Axis_Variable, (Window1_EndX - Window1_StartX)/2 + Window1_StartX, Window1_StartY + 30);
 }
 
 void drawData() {
@@ -155,7 +158,6 @@ void drawData() {
       vertex((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - 5);
       text(days[i].get_month_name(), (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - 10);
     } else if (days[i-1].get_month() < days[i].get_month()) {
-      //println("month change");
       vertex((i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - 5);
       text(days[i].get_month_name(), (i*Window1_SteppingX) + Window1_StartX + Data_Buffer, Window1_EndY - 10);
     }
@@ -277,7 +279,6 @@ void drawZoom() {
         vertex(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - 5);
         text(days[i].get_month_name(), ((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - 10);
       } else if (days[i].get_month() > days[i-1].get_month()) {
-        //println("month change");
         vertex(((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - 5);
         text(days[i].get_month_name(), ((i-Index_Offset)*Window2_SteppingX)+Window2_StartX+Data_Buffer, Window2_EndY - 10);
       }
@@ -350,7 +351,7 @@ void drawAnalytics() {
 
   int x0 = 0;
   int x1 = 0;
-  //println(Num_Selected);
+
   if (Num_Selected == 0) {
     //Show analysis on all data
     x0 = 0;
@@ -621,9 +622,6 @@ void write_temp_data(int Window3_Midpoint)
       average_temp += avg_temp_array[i];
     }
     average_temp /= Num_Selected;
-        
-    if (min_temp_array.length != 0)
-      println(min(min_temp_array));
     
     int total_max[] = new int[Number_Days];
     int total_min[] = new int[Number_Days];
@@ -675,15 +673,9 @@ void write_rain_data(int Window3_Midpoint)
       num_entries += 1;
     }
   }
-  
-
   float max_rain = 0;
-    for (int i = 0; i < Number_Days - 1; i++)
+  for (int i = 0; i < Number_Days - 1; i++)
       max_rain += days[i].get_rain();
-      
-  
-
-  
   if ( rain_array.length == 0 ){
   text("Total rain (in.): " + max_rain, Window3_Midpoint, Window3_StartY + 230);
   text("Average rain (in.): " + max_rain / Number_Days, Window3_Midpoint, Window3_StartY + 260);
@@ -697,31 +689,3 @@ void write_rain_data(int Window3_Midpoint)
   text("Min rain (in.):" + min(rain_array), Window3_Midpoint, Window3_StartY + 320);
   }
 }
-
-/* 
- TODO:
- label axes with databuffer
- label window 3 if the data in the selected area is true it's sent to win 2.
- calculate:
- min
- max 
- avg
- tot steps 
- tot sleep
- start/end date
- have date follow mouse
- toggle keys
- 
- For the Window 1 panel, this will be a bar graph of the temperature over time with a single point mark on each bar to indicate how many steps were walked, or something like that.
- The visual idiom is still being debated.
- 
- The Window 2 panel will be the streched and enhanced version of the data selected from Window 1 with added details such as the weather that day, how much precipitation, etc.
- 
- The window 3 panel will have the summary information from the Window 2 such as the average temperature during this time, the total number of steps, the number of days included in this
- selection, the begin date and end date, Standard deviation of the number of steps walked, avg precipitation over these days, etc.
- 
- The window should be recizable and the data being shown should resize with the window as well. Including the text in the Window 3 panel.
- 
- Should be able to sort data based on precipitation
- 
- */
