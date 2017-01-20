@@ -129,13 +129,9 @@ void drawWindows() {
   Window3_EndX = width - Window_Buffer;
   Window3_EndY = height - Window_Buffer;  
   rect(Window3_StartX, Window3_StartY, (Window3_EndX - Window3_StartX), (Window3_EndY - Window3_StartY));
-<<<<<<< HEAD
-    
-  fill(0,0,0);
-=======
-  
+
   fill(0, 0, 0);
->>>>>>> origin/master
+
   textSize(25);
   text(Y_Axis_Variable, (Window1_EndX - Window1_StartX)/2 + Window1_StartX, Window1_StartY + 30);
 }
@@ -715,36 +711,4 @@ void write_rain_data(int Window3_Midpoint)
   text("Max rain (in.):" + max(rain_array), Window3_Midpoint, Window3_StartY + 290);
   text("Min rain (in.):" + min(rain_array), Window3_Midpoint, Window3_StartY + 320);
   }
-<<<<<<< HEAD
 }
-=======
-}
-
-/* 
- TODO:
- label axes with databuffer
- label window 3 if the data in the selected area is true it's sent to win 2.
- calculate:
- min
- max 
- avg
- tot steps 
- tot sleep
- start/end date
- have date follow mouse
- toggle keys
- 
- For the Window 1 panel, this will be a bar graph of the temperature over time with a single point mark on each bar to indicate how many steps were walked, or something like that.
- The visual idiom is still being debated.
- 
- The Window 2 panel will be the streched and enhanced version of the data selected from Window 1 with added details such as the weather that day, how much precipitation, etc.
- 
- The window 3 panel will have the summary information from the Window 2 such as the average temperature during this time, the total number of steps, the number of days included in this
- selection, the begin date and end date, Standard deviation of the number of steps walked, avg precipitation over these days, etc.
- 
- The window should be recizable and the data being shown should resize with the window as well. Including the text in the Window 3 panel.
- 
- Should be able to sort data based on precipitation
- 
- */
->>>>>>> origin/master
